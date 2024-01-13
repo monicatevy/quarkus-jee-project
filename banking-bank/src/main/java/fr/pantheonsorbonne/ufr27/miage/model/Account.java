@@ -50,7 +50,7 @@ public class Account {
         return solde;
     }
 
-    public void setSolde(int solde) {
+    public void setSolde(double solde) {
         this.solde = solde;
     }
 
@@ -67,7 +67,7 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return idAccount == account.idAccount && solde == account.solde && idCustomer == account.idCustomer && Objects.equals(password, account.password);
+        return idAccount == account.idAccount && Double.compare(account.solde, solde) == 0 && idCustomer == account.idCustomer && Objects.equals(password, account.password);
     }
 
     @Override
