@@ -2,6 +2,8 @@ package top.nextnet.cli;
 
 
 import fr.pantheonsorbonne.ufr27.miage.cli.Functionality;
+import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
+import fr.pantheonsorbonne.ufr27.miage.dto.ReponseAuthorisation;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.beryx.textio.TextIO;
@@ -15,6 +17,7 @@ import top.nextnet.service.BankService;
 
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +61,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         int bankInput = textIO.newIntInputReader().withMinVal(1).withMaxVal(banks.size()).read("Enter your bank: ");
         return banks.get(bankInput - 1);
     }
+
 
     @Override
     public void displayUserOptions(top.nextnet.model.User user){

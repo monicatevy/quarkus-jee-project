@@ -18,17 +18,17 @@ public class ReponseAuthorisation {
     public User getUser(){
         return this.user;
     }
-    public void setTexte(String texte){
+    public void setToken(String token){
         this.token = token;
     }
-    public String getTexte(){
+    public String getToken(){
         return this.token;
     }
 
     public void setUserBankName(String bankName){
         this.bankName = bankName;
     }
-    public void getUserBankName(String bankName){
-        this.bankName = bankName;
+    public String getUserBankName() {
+        return this.bankName;
     }
 }

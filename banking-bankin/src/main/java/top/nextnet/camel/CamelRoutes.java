@@ -1,7 +1,7 @@
 package top.nextnet.camel;
 
 
-import fr.pantheonsorbonne.ufr27.miage.cli.UserInterface;
+import fr.pantheonsorbonne.ufr27.miage.dto.ReponseAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -9,6 +9,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import top.nextnet.cli.BankGroup;
+import top.nextnet.cli.UserInterface;
+import top.nextnet.service.TokenDataService;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -18,10 +20,13 @@ public class CamelRoutes extends RouteBuilder {
 
     @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.jmsPrefix")
     String jmsPrefix;
+    @Inject
+    UserInterface eCommerce;
+    @Inject
+    TokenDataService tokenDataService;
 
     @Inject
     CamelContext camelContext;
-
     @Override
     public void configure() throws Exception {
 
@@ -34,8 +39,15 @@ public class CamelRoutes extends RouteBuilder {
                 .when(header("bankGroup").isEqualTo(BankGroup.SG))
                 .log("Request from SG bank. Using JSON format.")
                 .marshal().json()
-                .to("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut")
-        ;
+                .to("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut");
+
+        from("sjms2:topic:receiveToken" + jmsPrefix + "?exchangePattern=InOut")
+                .log("User email: ${header.UserEmail}, Message Body: ${body}")
+                .unmarshal().json(ReponseAuthorisation.class)
+                .bean(tokenDataService, "saveTokenData")
+                .log("Token received from bank: ${body}")
+                .to("direct:sentToken");
+
 
                 /*
                 .when(header("bankGroup").isEqualTo(BankGroup.BPCE))

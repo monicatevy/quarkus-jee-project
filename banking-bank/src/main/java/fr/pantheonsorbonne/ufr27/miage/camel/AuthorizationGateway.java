@@ -24,7 +24,7 @@ public class AuthorizationGateway {
             if (response.equals("Yes")) {
                 String token = tokenService.generateToken(user.getEmail());
                 ReponseAuthorisation reponseAuthorisation = new ReponseAuthorisation(user,bankName,token);
-                producerTemplate.sendBodyAndHeader("direct:receiveToken", reponseAuthorisation, "UserEmail", user.getEmail());
+                producerTemplate.sendBodyAndHeader("direct:sentToken", reponseAuthorisation, "UserEmail", user.getEmail());
             }
         }
         catch (TokenGenerationException e) {

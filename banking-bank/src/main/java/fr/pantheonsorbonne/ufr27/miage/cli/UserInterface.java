@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public interface UserInterface {
     void showErrorMessage(String errorMessage);
-    void showTest(User user) throws IOException;
     void processAuthorizationRequest(User user) throws IOException;
     void showSuccessMessage(String s);
 

@@ -14,7 +14,6 @@ public interface UserInterfaceCLI extends BiConsumer<TextIO, RunnerData>, UserIn
     void userFunctionalities(User user);
     void processAuthorizationRequest(User user) throws IOException;
 
-    void showTest(User user) throws IOException;
 
     void showSuccessMessage(String s);
 

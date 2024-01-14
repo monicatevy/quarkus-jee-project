@@ -1,6 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
-
+import fr.pantheonsorbonne.ufr27.miage.exception.NotificationFoundException;
 import fr.pantheonsorbonne.ufr27.miage.cli.UserInterface;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.BankAccountNotFoundException;
@@ -42,6 +42,10 @@ public class CamelRoutes extends RouteBuilder {
                 .setHeader("success",simple("false"))
                 .setBody(simple("Customer Not found"));
 
+        onException(NotificationFoundException.NotificationAuthorisationFoundException.class)
+                .handled(true)
+                .setHeader("success",simple("false"))
+                .setBody(simple("Request has already been sent for today ! It will expire in the next 24 hours"));
 
         from("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut")
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
@@ -54,10 +58,12 @@ public class CamelRoutes extends RouteBuilder {
                 .to("direct:cli")
         ;
 
-        from("sjms2:topic:receiveToken" + jmsPrefix + "?exchangePattern=InOut")
+        from("direct:sentToken" + jmsPrefix + "?exchangePattern=InOut")
                 .log("User email: ${header.UserEmail}, Message Body: ${body}")
-                .to("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut")
+                .marshal().json()
+                .to("sjms2:topic:receiveToken" + jmsPrefix + "?exchangePattern=InOut")
                 .log("Token sent to bankin");
+
 
                 /*
                 .bean(eCommerce, "showTest").stop()

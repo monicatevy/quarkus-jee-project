@@ -1,5 +1,6 @@
 package top.nextnet.cli;
 
+import fr.pantheonsorbonne.ufr27.miage.dto.ReponseAuthorisation;
 import org.beryx.textio.TextIO;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import top.nextnet.model.Bank;
