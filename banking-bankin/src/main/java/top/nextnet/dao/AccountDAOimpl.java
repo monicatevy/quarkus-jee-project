@@ -29,12 +29,5 @@ public class AccountDAOimpl implements AccountDAO {
         }
     }
 }
-    /*
-    @Override
-    public List<Account> findAccountsByCustomerId(int customerId) {
-        TypedQuery<Account> query = em.createQuery("SELECT a FROM Account a WHERE a.idUser = :customerId", Account.class);
-        query.setParameter("customerId", customerId);
-        return query.getResultList();
-    }
-}
-    */
+
+

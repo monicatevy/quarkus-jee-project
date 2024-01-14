@@ -1,5 +1,7 @@
 package fr.pantheonsorbonne.ufr27.miage.cli;
 
+import fr.pantheonsorbonne.ufr27.miage.camel.NotificationGateway;
+import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthentification;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
 import fr.pantheonsorbonne.ufr27.miage.service.CompteService;
@@ -16,6 +18,7 @@ import fr.pantheonsorbonne.ufr27.miage.model.Account;
 import fr.pantheonsorbonne.ufr27.miage.model.Notification;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +37,9 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     CustomerService customerService;
     @Inject
     TokenService tokenService;
+    @Inject
+    NotificationGateway notificationGateway;
+
     @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.bankName")
     String bankName;
 
@@ -46,7 +52,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         return new User(email,password);
     }
     @Override
-    public void userFunctionalities(User user){
+    public void userFunctionalities(User user) throws IOException {
         List<String> functionalityNames = new ArrayList<>();
         for (Functionality functionality : Functionality.values()) {
             functionalityNames.add(functionality.name().toLowerCase());
@@ -58,30 +64,31 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         }
     }
 
-    private void respondNotification(User user){
+    private void respondNotification(User user) throws IOException {
         Customer customer = customerService.findCustomer(user.getEmail());
         Account account = compteService.findAccount(customer.getIdCustomer());
 
         Collection<Notification> notif = notificationService.notificationAuthorisationAvailableForAnAccount(account.getIdAccount());
 
-        if(notif != null){
             for(Notification n : notif){
                 terminal.println(n.getTexte());
                 String response = textIO.newStringInputReader().withPossibleValues(Arrays.asList("Yes", "No")).read("Select a response");
+                /*
                 if(response.equals("Yes")) {
                     try {
-                        String token = tokenService.generateToken(user.getEmail());
-                        terminal.println("Token generated and sent: " + token); //pour voir la génération de token
-                    } catch (Exception | TokenGenerationException e) {
+                        //DemandeAuthentification demandeAuthentification = tokenService.generateToken(user);
+                        terminal.println("Token generated and sent: " ); //pour voir la génération de token
+                    } catch (Exception e) {
                         terminal.println("Error generating token: " + e.getMessage());
                     }
                 }
+                 */
+                notificationGateway.sendResponseSynchro(response,n,user);
                 terminal.println("Message sent !");
             }
-        }else{
-            terminal.println("Empty notification");
         }
-    }
+
+
 
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {

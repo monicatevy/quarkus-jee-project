@@ -32,7 +32,7 @@ public class Main implements Runnable {
         while (true) {
             try {
                 User user = eCommerce.getUserInfoToBankin();
-                if(connexionService.login(user.getEmail(), user.getpwd())){
+                if(connexionService.login(user.getEmail(), user.getPwd())){
                     terminal.println("Success !");
                 }else{
                     throw new Exception("Connexion échoué");
