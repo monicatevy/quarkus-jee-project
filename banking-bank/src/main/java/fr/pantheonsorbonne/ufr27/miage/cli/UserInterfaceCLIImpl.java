@@ -79,7 +79,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
             for(Notification n : notif) {
                 terminal.println(n.getTexte());
                 String response = textIO.newStringInputReader().withPossibleValues(Arrays.asList("Yes", "No")).read("Select a response");
-                notificationGateway.sendResponseSynchro(response,n);
+                // notificationGateway.sendResponseSynchro(response,n);
                 terminal.println("\n==================\n");
                 terminal.println("Message sent !\n");
             }
@@ -101,6 +101,12 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         terminal.getProperties().setPromptColor(Color.RED);
         terminal.println(errorMessage);
         terminal.getProperties().setPromptColor(Color.white);
+    }
+
+    public boolean getAuthorizationRequestResponse(DemandeAuthorisation demandeAuthorisation) {
+        //showAuthorizationRequest(demandeAuthorisation.getUser().getEmail());
+        //return getClientResponse();
+        return false;
     }
 
     public void processAuthorizationRequest(User user) throws IOException {
