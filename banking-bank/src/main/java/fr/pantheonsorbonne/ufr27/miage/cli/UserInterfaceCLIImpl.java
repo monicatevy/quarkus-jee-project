@@ -21,6 +21,7 @@ import fr.pantheonsorbonne.ufr27.miage.model.Account;
 import fr.pantheonsorbonne.ufr27.miage.model.Notification;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     CompteService compteService;
     @Inject
     CustomerService customerService;
+    @Inject
+    AuthorizationGateway authorizationGateway;
+
+    @Inject
+    NotificationGateway notificationGateway;
     @Inject
     TokenService tokenService;
     @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.bankName")

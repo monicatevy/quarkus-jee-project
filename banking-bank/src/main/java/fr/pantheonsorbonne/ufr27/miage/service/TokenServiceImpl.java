@@ -17,7 +17,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 @ApplicationScoped
 public class TokenServiceImpl implements TokenService {
-    private final String secretKey = "YourVeryLongSecretKeyForJWTGeneration"; // Replace with a secure key
+    private final String secretKey = "YourVeryLongSecretKeyForJWTGeneration";
 
     @Override
     public String generateToken(String email) throws TokenGenerationException {
