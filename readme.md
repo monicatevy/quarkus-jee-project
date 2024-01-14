@@ -25,10 +25,7 @@ Diagramme de séquence : Ajouter un compte dans l'application Bankin.
 
 ![](sdAddAccount.png)
 
-
-Diagramme de séquence : Réaliser une transaction via Bankin
-
-![](sdTransaction.png)
+![](sdGeneral.png)
 
 
 ## Schémas relationnels 
