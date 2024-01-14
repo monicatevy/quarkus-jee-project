@@ -22,7 +22,7 @@ public class AuthorizationGateway {
         try (ProducerTemplate producerTemplate = context.createProducerTemplate()) {
             if (response.equals("Yes")) {
                 String token = tokenService.generateToken(user.getEmail());
-                producerTemplate.sendBodyAndHeader("direct:receiveToken", token, "bankName", bankName);
+                producerTemplate.sendBodyAndHeader("direct:sendToken", token, "bankName", bankName);
             }
         }
         catch (TokenGenerationException e) {
