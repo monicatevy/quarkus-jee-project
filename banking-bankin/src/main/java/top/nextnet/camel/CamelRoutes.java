@@ -35,6 +35,11 @@ public class CamelRoutes extends RouteBuilder {
 
         from("direct:cli")
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
+
+                .setHeader("bankName",simple("Boursorama"))
+                .setHeader("clientEmail",simple("1"))
+                .setHeader("bankGroup",simple("BPCE"))
+
                 .choice()
                 .when(header("bankGroup").isEqualTo(BankGroup.SG))
                 .log("Request from SG bank. Using JSON format.")

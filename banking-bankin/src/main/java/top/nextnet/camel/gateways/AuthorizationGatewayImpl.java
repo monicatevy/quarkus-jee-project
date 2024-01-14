@@ -1,9 +1,6 @@
 package top.nextnet.camel.gateways;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
-import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
@@ -11,7 +8,11 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.ConsumerTemplate;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.apache.camel.Exchange;
+import top.nextnet.model.Bank;
+
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @ApplicationScoped
 public class AuthorizationGatewayImpl implements top.nextnet.service.AuthorizationGateway {
@@ -23,9 +24,13 @@ public class AuthorizationGatewayImpl implements top.nextnet.service.Authorizati
     String jmsPrefix;
 
     @Override
-    public void sendAuthorizationRequest(String bankGroup, DemandeAuthorisation demandeAuthorisation) {
+    public void sendAuthorizationRequest(Bank selectedBank, DemandeAuthorisation demandeAuthorisation) {
         try (ProducerTemplate producer = context.createProducerTemplate()) {
-            producer.sendBodyAndHeader("direct:cli", demandeAuthorisation, "bankGroup", bankGroup);
+            Map<String, Object> headers = new HashMap<>();
+            headers.put("bankName", selectedBank.getName());
+            headers.put("bankGroup", selectedBank.getGroupName());
+            headers.put("clientEmail", demandeAuthorisation.getUser().getEmail());
+            producer.sendBodyAndHeaders(demandeAuthorisation, headers);
         } catch (IOException e) {
             e.printStackTrace();
         }

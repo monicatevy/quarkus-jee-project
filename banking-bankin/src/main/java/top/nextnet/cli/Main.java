@@ -58,7 +58,7 @@ public class Main implements Runnable {
                             Bank selectedBank = eCommerce.getUserBank();
                             User userBank = eCommerce.getUserInfoForBank(selectedBank.getName());
                             DemandeAuthorisation authorizationRequest = new DemandeAuthorisation(userBank, "Add account authorization request");
-                            authorizationGateway.sendAuthorizationRequest(selectedBank.getGroupName(), authorizationRequest);
+                            authorizationGateway.sendAuthorizationRequest(selectedBank, authorizationRequest);
                             boolean authorized = authorizationGateway.receiveAuthorizationResponse();
                             if(authorized){
                                 eCommerce.showSuccessMessage("Authorization granted!");
