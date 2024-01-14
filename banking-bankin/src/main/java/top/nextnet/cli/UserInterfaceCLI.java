@@ -13,6 +13,7 @@ public interface UserInterfaceCLI extends BiConsumer<TextIO, RunnerData>, UserIn
     User getUserInfoForBank(String bankName);
     Bank getUserBank();
     void displayUserOptions(top.nextnet.model.User user);
+    void showAuthorizationRequestResponse(String text, boolean authorized);
 }
 
 

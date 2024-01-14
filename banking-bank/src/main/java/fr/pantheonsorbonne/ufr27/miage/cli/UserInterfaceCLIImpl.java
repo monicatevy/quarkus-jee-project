@@ -91,31 +91,37 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         terminal = textIO.getTextTerminal();
    }
 
-    @Override
-    public void showErrorMessage(String errorMessage) {
-        terminal.getProperties().setPromptColor(Color.RED);
-        terminal.println(errorMessage);
-        terminal.getProperties().setPromptColor(Color.white);
+    public boolean getAuthorizationRequestResponse(User user) {
+        showAuthorizationRequest(user.getEmail());
+        return getClientResponse();
     }
 
-    public void processAuthorizationRequest(User user) {
-        showTest(user.getEmail());
+    public void showAuthorizationRequest(String email) {
+        terminal.println();
+        terminal.println("--- AUTHORIZATION REQUEST FROM BANKIN ---");
+        terminal.println("Request for: " + email);
     }
 
-    @Override
-    public void showTest(String email) {
-        terminal.println();
-        terminal.println();
-        terminal.println("--- AUTHORIZATION FROM BANKIN ---");
-        terminal.println("request for: " + email);
-        terminal.println();
+    public boolean getClientResponse() {
+        String response = textIO.newStringInputReader()
+                .read("Do you authorize this request? (Y/N)")
+                .toUpperCase();
+        return response.equals("Y");
     }
-
 
     @Override
     public void showSuccessMessage(String s) {
         terminal.getProperties().setPromptColor(Color.GREEN);
+        terminal.println("");
         terminal.println(s);
+        terminal.getProperties().setPromptColor(Color.white);
+    }
+
+    @Override
+    public void showErrorMessage(String errorMessage) {
+        terminal.getProperties().setPromptColor(Color.RED);
+        terminal.println("");
+        terminal.println(errorMessage);
         terminal.getProperties().setPromptColor(Color.white);
     }
 }

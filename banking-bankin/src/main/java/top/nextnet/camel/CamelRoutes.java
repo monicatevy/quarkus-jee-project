@@ -33,8 +33,23 @@ public class CamelRoutes extends RouteBuilder {
                 .when(header("bankGroup").isEqualTo(BankGroup.SG))
                 .log("Request from SG bank. Using JSON format.")
                 .marshal().json()
-                .to("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut")
+                .to("sjms2:topic:authorization" + jmsPrefix)
         ;
+/*
+        from("sjms2:topic:authorizationResponse" + jmsPrefix + "?exchangePattern=InOnly")
+                .log("Received Authorization Response from BANK: ${body}")
+                .choice()
+                .when(header("authorized").isEqualTo(true))
+                .setBody(constant("Authorization granted!"))
+                .bean(eCommerce, "showSuccessMessage")
+                .otherwise()
+                .setBody(constant("Authorization denied."))
+                .bean(eCommerce, "showErrorMessage")
+                .end()
+        ;
+
+ */
+
 
                 /*
                 .when(header("bankGroup").isEqualTo(BankGroup.BPCE))

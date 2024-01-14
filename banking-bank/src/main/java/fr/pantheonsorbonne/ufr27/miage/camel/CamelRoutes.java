@@ -42,16 +42,20 @@ public class CamelRoutes extends RouteBuilder {
                 .setHeader("success",simple("false"))
                 .setBody(simple("Customer Not found"));
 
-        from("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut")
+        from("sjms2:topic:authorization" + jmsPrefix)
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
                 .unmarshal().json(User.class)
-                .bean(eCommerce, "processAuthorizationRequest")
-                .process(exchange -> {
-                    exchange.getMessage().setBody("TEST ADD ACCOUNT");
-                })
-                .log("Response from Bank: ${body}")
-                .to("direct:cli")
+                .bean(eCommerce, "getAuthorizationRequestResponse")
+                .choice()
+                .when(body().isEqualTo(true))
+                .setHeader("authorized", constant(true))
+                .otherwise()
+                .setHeader("authorized", constant(false))
+                .end()
+                .setBody(constant("Response from Bank"))
+                .to("sjms2:topic:authorizationResponse"+ jmsPrefix)
         ;
+
 
                 /*
                 .bean(eCommerce, "showTest").stop()

@@ -69,6 +69,14 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     }
 
     @Override
+    public void showAuthorizationRequestResponse(String text, boolean authorized){
+        terminal.getProperties().setPromptColor(authorized ? Color.GREEN : Color.RED);
+        terminal.println();
+        terminal.println("---------------");
+        terminal.println(text);
+    }
+
+    @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         this.textIO = textIO;
         terminal = textIO.getTextTerminal();

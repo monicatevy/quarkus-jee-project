@@ -56,6 +56,13 @@ public class Main implements Runnable {
                             Bank selectedBank = eCommerce.getUserBank();
                             User userBank = eCommerce.getUserInfoForBank(selectedBank.getName());
                             authorizationGateway.sendAuthorizationRequest(selectedBank.getGroupName(), userBank);
+                            boolean authorized = authorizationGateway.receiveAuthorizationResponse();
+                            if(authorized){
+                                eCommerce.showSuccessMessage("Authorization granted!");
+                            }
+                            else{
+                                eCommerce.showErrorMessage("Authorization denied.");
+                            }
                         }
                         case 2 -> {
                         }

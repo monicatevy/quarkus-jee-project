@@ -11,5 +11,5 @@ public interface UserInterfaceCLI extends BiConsumer<TextIO, RunnerData>, UserIn
 
     User getUserInfoToBank();
     void userFunctionalities(User user);
-    void processAuthorizationRequest(User user);
+    boolean getAuthorizationRequestResponse(User user);
 }

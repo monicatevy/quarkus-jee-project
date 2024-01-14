@@ -7,8 +7,8 @@ import org.apache.camel.Header;
 
 public interface UserInterface {
     void showErrorMessage(String errorMessage);
-    void showTest(String email);
-    void processAuthorizationRequest(User user);
+    void showAuthorizationRequest(String email);
+    boolean getAuthorizationRequestResponse(User user);
     void showSuccessMessage(String s);
 
 }
