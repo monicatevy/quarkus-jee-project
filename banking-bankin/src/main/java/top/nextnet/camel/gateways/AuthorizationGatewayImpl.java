@@ -36,5 +36,3 @@ public class AuthorizationGatewayImpl implements top.nextnet.service.Authorizati
     }
 
 }
-
-

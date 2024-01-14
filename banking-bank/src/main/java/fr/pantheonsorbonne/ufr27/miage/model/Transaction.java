@@ -22,7 +22,7 @@ public class Transaction {
     private String destinataire;
     @Basic
     @Column(name = "etat", nullable = false)
-    private byte etat;
+    private int etat;
     @Basic
     @Column(name = "type", nullable = false, length = 20)
     private String type;
@@ -59,7 +59,7 @@ public class Transaction {
         this.destinataire = destinataire;
     }
 
-    public byte getEtat() {
+    public int getEtat() {
         return etat;
     }
 

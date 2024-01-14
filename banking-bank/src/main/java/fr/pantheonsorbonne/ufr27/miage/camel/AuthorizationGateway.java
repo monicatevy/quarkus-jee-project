@@ -1,5 +1,6 @@
 package fr.pantheonsorbonne.ufr27.miage.camel;
 
+import fr.pantheonsorbonne.ufr27.miage.dto.ReponseAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
 import fr.pantheonsorbonne.ufr27.miage.service.TokenService;
@@ -22,7 +23,8 @@ public class AuthorizationGateway {
         try (ProducerTemplate producerTemplate = context.createProducerTemplate()) {
             if (response.equals("Yes")) {
                 String token = tokenService.generateToken(user.getEmail());
-                producerTemplate.sendBodyAndHeader("direct:receiveToken", token, "bankName", bankName);
+                ReponseAuthorisation reponseAuthorisation = new ReponseAuthorisation(user,bankName,token);
+                producerTemplate.sendBodyAndHeader("direct:receiveToken", reponseAuthorisation, "UserEmail", user.getEmail());
             }
         }
         catch (TokenGenerationException e) {

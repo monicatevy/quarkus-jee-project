@@ -29,26 +29,23 @@ public class Main implements Runnable {
 
         eCommerce.accept(textIO, new RunnerData(""));
 
-            while(true){
-                try {
-                    User user = eCommerce.getUserInfoToBank();
-                    if(compteService.login(user.getEmail(), user.getpwd())){
-                        terminal.println("Success ! Bienvenue !");
-                        while(true){
-                            eCommerce.userFunctionalities(user);
-                        }
-                    }else{
-                        throw new Exception("Connexion échoué");
-                    }
-                } catch (Exception e) {
-                    eCommerce.showErrorMessage(e.getMessage());
+        boolean isConnected = false;
+        while (!isConnected) {
+            try {
+                User user = eCommerce.getUserInfoToBank();
+                isConnected = compteService.login(user.getEmail(), user.getpwd());
+
+                if (isConnected) {
+                    terminal.println("Success ! Bienvenue !");
+                    eCommerce.userFunctionalities(user);
+                } else {
+                    throw new Exception("Connexion échouée");
                 }
+            } catch (Exception e) {
+                eCommerce.showErrorMessage(e.getMessage());
             }
-
-
-
+        }
 
 
     }
-
 }

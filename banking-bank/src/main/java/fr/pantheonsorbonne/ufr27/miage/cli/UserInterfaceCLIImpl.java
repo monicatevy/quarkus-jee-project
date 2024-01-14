@@ -1,18 +1,14 @@
 package fr.pantheonsorbonne.ufr27.miage.cli;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.pantheonsorbonne.ufr27.miage.camel.AuthorizationGateway;
+
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
-import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
 import fr.pantheonsorbonne.ufr27.miage.service.CompteService;
 import fr.pantheonsorbonne.ufr27.miage.service.CustomerService;
 import fr.pantheonsorbonne.ufr27.miage.service.NotificationService;
 import fr.pantheonsorbonne.ufr27.miage.service.TokenService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.apache.camel.Body;
-import org.apache.camel.Header;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -122,7 +118,6 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         authorizationGateway.sendResponseRequest(response,user,bankName);
         terminal.println("Authorisation sent !");
     }
-
 
 
     @Override

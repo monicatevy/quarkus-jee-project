@@ -27,29 +27,32 @@ public class CamelRoutes extends RouteBuilder {
 
         camelContext.setTracing(true);
 
+
         from("direct:cli")
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
                 .choice()
                 .when(header("bankGroup").isEqualTo(BankGroup.SG))
                 .log("Request from SG bank. Using JSON format.")
                 .marshal().json()
-                .to("sjms2:" + jmsPrefix + "authorizationSG?exchangePattern=InOut")
+                .to("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut")
+        ;
 
                 /*
                 .when(header("bankGroup").isEqualTo(BankGroup.BPCE))
                 .log("Request from BPCE bank. Using XML format.")
                 .marshal().jaxb(User.class.getPackage().getName())
                 .to("sjms2:" + jmsPrefix + "authorizationBPCE?exchangePattern=InOut")
-                */
 
                 .otherwise()
                 .log("Unknown bankGroup: ${header.bankGroup}")
                 .end()
-        ;
+
+                 */
+
 
 
         //.to("direct:authorization");
-                //.bean(eCommerce, "showTest").stop();
+        //.bean(eCommerce, "showTest").stop();
 
 
         /*onException(ExpiredTransitionalTicketException.class)

@@ -5,6 +5,7 @@ import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import org.apache.camel.Body;
 import org.apache.camel.Header;
 
+
 import java.io.IOException;
 
 public interface UserInterface {

@@ -16,7 +16,7 @@ public class Notification {
     private String texte;
     @Basic
     @Column(name = "etat", nullable = false)
-    private byte etat;
+    private int etat;
     @Basic
     @Column(name = "id_account", nullable = false)
     private int idAccount;
@@ -26,7 +26,7 @@ public class Notification {
     @Basic
     @Column(name = "type", nullable = false, length = 50)
     private String type;
-    public Notification(String texte, byte etat, int idAccount, Date date, String type){
+    public Notification(String texte, int etat, int idAccount, Date date, String type){
         this.texte = texte;
         this.etat = etat;
         this.idAccount = idAccount;
@@ -51,11 +51,11 @@ public class Notification {
         this.texte = texte;
     }
 
-    public byte getEtat() {
+    public int getEtat() {
         return etat;
     }
 
-    public void setEtat(byte etat) {
+    public void setEtat(int etat) {
         this.etat = etat;
     }
 

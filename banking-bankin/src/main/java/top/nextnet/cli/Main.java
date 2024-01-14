@@ -62,7 +62,7 @@ public class Main implements Runnable {
                         default -> terminal.println("Invalid choice.");
                     }
 
-                    isConnected = true;
+
                 } else {
                     throw new Exception("Connexion échouée");
                 }
