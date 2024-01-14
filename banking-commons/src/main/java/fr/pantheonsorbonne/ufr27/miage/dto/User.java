@@ -1,8 +1,5 @@
 package fr.pantheonsorbonne.ufr27.miage.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
