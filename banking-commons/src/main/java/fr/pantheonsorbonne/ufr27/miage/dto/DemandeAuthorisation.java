@@ -6,11 +6,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DemandeAuthorisation {
     String texte;
     User user;
+
+    public DemandeAuthorisation(){}
+
     public DemandeAuthorisation(User user, String texte){
         this.user = user;
         this.texte = texte;
     }
-    public DemandeAuthorisation(){}
     public void setUser(User user){
         this.user = user;
     }

@@ -1,31 +1,33 @@
 package top.nextnet.cli;
 
 
-import fr.pantheonsorbonne.ufr27.miage.dto.Booking;
-import fr.pantheonsorbonne.ufr27.miage.dto.Gig;
-
-
+import fr.pantheonsorbonne.ufr27.miage.cli.Functionality;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 //import top.nextnet.resource.VendorService;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
+import top.nextnet.model.Account;
+import top.nextnet.model.Bank;
+import top.nextnet.service.BankService;
 
 
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class UserInterfaceCLIImpl implements UserInterfaceCLI {
+    @Inject
+    BankService bankService;
     TextTerminal<?> terminal;
     TextIO textIO;
 
+
     public User getUserInfoToBankin(){
+        terminal.println();
         terminal.println("Welcome to bankin !");
 
         String email = textIO.newStringInputReader().read("Your email ?");
@@ -33,69 +35,64 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
 
         return new User(email,password);
     }
-    @Override
-    public void accept(TextIO textIO, RunnerData runnerData) {
-        this.textIO = textIO;
-        terminal = textIO.getTextTerminal();
+
+    public User getUserInfoForBank(String bankName){
+        terminal.println();
+        terminal.println("Bank account information for " + bankName);
+        String email = textIO.newStringInputReader().read("Email: ");
+        String password = textIO.newStringInputReader().withInputMasking(true).read("Password: ");
+        return new User(email,password);
     }
 
-    @Override
-    public void showErrorMessage(String errorMessage) {
-        terminal.getProperties().setPromptColor(Color.RED);
-        terminal.println(errorMessage);
-        terminal.getProperties().setPromptColor(Color.white);
+    public Bank getUserBank(){
+        List<Bank> banks = bankService.getAllBanks();
+        if (banks.isEmpty()) {
+            terminal.println("No banks available.");
+        } else {
+            terminal.println();
+            terminal.println("Our partner banks: ");
+            for (int i = 0; i < banks.size(); i++) {
+                terminal.println("(" + (i + 1) + ") " + banks.get(i).getName());
+            }
+        }
+        int bankInput = textIO.newIntInputReader().withMinVal(1).withMaxVal(banks.size()).read("Enter your bank: ");
+        return banks.get(bankInput - 1);
     }
 
-    @Override
-    public void showSuccessMessage(String s) {
-        terminal.getProperties().setPromptColor(Color.GREEN);
-        terminal.println(s);
-        terminal.getProperties().setPromptColor(Color.white);
-    }
-}
-
-
- /*
-@ApplicationScoped
-public class UserInterfaceCLIImpl implements UserInterfaceCLI {
-
-    @Inject
-    @RestClient
-    VendorService vendorService;
-
-
-    TextTerminal<?> terminal;
-    TextIO textIO;
-
-    @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.vendorId")
-    Integer vendorId;
-
-    public void displayAvailableGigsToCli(){
-        terminal.println("VendorId="+vendorId);
-        for (Gig gig : vendorService.getGigs(vendorId)) {
-            terminal.println("[" + gig.getVenueId() + "] " + gig.getArtistName() + " " + gig.getDate().format(DateTimeFormatter.ISO_DATE) + " " + gig.getLocation());
+    public void displayAccounts(List<Account> accounts) {
+        if (accounts.isEmpty()) {
+            terminal.println("No account found");
+        } else {
+            terminal.println("");
+            terminal.println("My accounts:");
+            String bankName = "";
+            for (Account account : accounts) {
+                bankName = bankService.getBankNameById(account.getIdBank());
+                terminal.println("- Account ID: " + account.getIdAccount() + bankName);
+            }
         }
     }
 
-    public Booking getBookingFromOperator(){
-        terminal.println("Which Gig to book?");
-
-        Integer venueId = textIO.newIntInputReader().withPossibleValues(vendorService.getGigs(vendorId).stream().map(g -> g.getVenueId()).collect(Collectors.toList())).read("Which venue?");
-        Integer sittingCount = textIO.newIntInputReader().read("How many seats?");
-        Integer standingCount = textIO.newIntInputReader().read("How many pit tickets?");
-
-        return new Booking(vendorId,venueId,standingCount,sittingCount);
+    @Override
+    public void displayUserOptions(top.nextnet.model.User user){
+        terminal.println();
+        terminal.println("Welcome "+user.getFirstName()+" "+user.getLastName());
+        terminal.println();
+        terminal.println("Menu:");
+        terminal.println("(1) add account");
+        terminal.println("(2) view my accounts");
     }
 
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
         this.textIO = textIO;
         terminal = textIO.getTextTerminal();
-   }
+    }
 
     @Override
     public void showErrorMessage(String errorMessage) {
         terminal.getProperties().setPromptColor(Color.RED);
+        terminal.println("");
         terminal.println(errorMessage);
         terminal.getProperties().setPromptColor(Color.white);
     }
@@ -103,31 +100,9 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     @Override
     public void showSuccessMessage(String s) {
         terminal.getProperties().setPromptColor(Color.GREEN);
+        terminal.println("");
         terminal.println(s);
         terminal.getProperties().setPromptColor(Color.white);
     }
-
-
-    @Override
-    public String getCustomerFirstName() {
-        return this.textIO.newStringInputReader().read("Customer First Name");
-
-    }
-
-    @Override
-    public String getCustomerLastName() {
-        return this.textIO.newStringInputReader().read("Customer Last Name");
-
-    }
-
-    @Override
-    public String getCustomerEmail() {
-        return this.textIO.newStringInputReader().read("Customer Email");
-
-    }
-
-
-
 }
 
-  */
