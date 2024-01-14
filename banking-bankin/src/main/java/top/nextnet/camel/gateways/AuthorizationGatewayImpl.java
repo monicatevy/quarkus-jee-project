@@ -2,6 +2,7 @@ package top.nextnet.camel.gateways;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -22,10 +23,9 @@ public class AuthorizationGatewayImpl implements top.nextnet.service.Authorizati
     String jmsPrefix;
 
     @Override
-    public void sendAuthorizationRequest(String bankGroup, User user) {
+    public void sendAuthorizationRequest(String bankGroup, DemandeAuthorisation demandeAuthorisation) {
         try (ProducerTemplate producer = context.createProducerTemplate()) {
-            // String userJson = convertUserToJson(user);
-            producer.sendBodyAndHeader("direct:cli", user, "bankGroup", bankGroup);
+            producer.sendBodyAndHeader("direct:cli", demandeAuthorisation, "bankGroup", bankGroup);
         } catch (IOException e) {
             e.printStackTrace();
         }

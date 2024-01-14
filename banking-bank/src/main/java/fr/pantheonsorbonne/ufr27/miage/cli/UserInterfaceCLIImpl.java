@@ -2,6 +2,7 @@ package fr.pantheonsorbonne.ufr27.miage.cli;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
 import fr.pantheonsorbonne.ufr27.miage.service.CompteService;
@@ -91,8 +92,8 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         terminal = textIO.getTextTerminal();
    }
 
-    public boolean getAuthorizationRequestResponse(User user) {
-        showAuthorizationRequest(user.getEmail());
+    public boolean getAuthorizationRequestResponse(DemandeAuthorisation demandeAuthorisation) {
+        showAuthorizationRequest(demandeAuthorisation.getUser().getEmail());
         return getClientResponse();
     }
 
@@ -104,9 +105,8 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
 
     public boolean getClientResponse() {
         String response = textIO.newStringInputReader()
-                .read("Do you authorize this request? (Y/N)")
-                .toUpperCase();
-        return response.equals("Y");
+                .read("Do you authorize this request? (Y/N)");
+        return response.toUpperCase().equals("Y");
     }
 
     @Override

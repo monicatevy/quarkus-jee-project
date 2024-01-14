@@ -2,6 +2,7 @@ package fr.pantheonsorbonne.ufr27.miage.camel;
 
 
 import fr.pantheonsorbonne.ufr27.miage.cli.UserInterface;
+import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.BankAccountNotFoundException;
 import fr.pantheonsorbonne.ufr27.miage.exception.BankCustomerNotFoundException;
@@ -44,7 +45,7 @@ public class CamelRoutes extends RouteBuilder {
 
         from("sjms2:topic:authorization" + jmsPrefix)
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
-                .unmarshal().json(User.class)
+                .unmarshal().json(DemandeAuthorisation.class)
                 .bean(eCommerce, "getAuthorizationRequestResponse")
                 .choice()
                 .when(body().isEqualTo(true))

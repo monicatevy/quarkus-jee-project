@@ -1,6 +1,7 @@
 package top.nextnet.cli;
 
 
+import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import jakarta.inject.Inject;
 import org.beryx.textio.TextIO;
@@ -55,7 +56,10 @@ public class Main implements Runnable {
                         case 1 -> {
                             Bank selectedBank = eCommerce.getUserBank();
                             User userBank = eCommerce.getUserInfoForBank(selectedBank.getName());
-                            authorizationGateway.sendAuthorizationRequest(selectedBank.getGroupName(), userBank);
+
+                            DemandeAuthorisation authorizationRequest = new DemandeAuthorisation(userBank, "Add account authorization request");
+
+                            authorizationGateway.sendAuthorizationRequest(selectedBank.getGroupName(), authorizationRequest);
                             boolean authorized = authorizationGateway.receiveAuthorizationResponse();
                             if(authorized){
                                 eCommerce.showSuccessMessage("Authorization granted!");
