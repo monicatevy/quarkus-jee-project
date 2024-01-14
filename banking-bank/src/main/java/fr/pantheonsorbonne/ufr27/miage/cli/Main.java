@@ -29,6 +29,7 @@ public class Main implements Runnable {
 
         eCommerce.accept(textIO, new RunnerData(""));
 
+        /*
             while(true){
                 try {
                     User user = eCommerce.getUserInfoToBank();
@@ -44,11 +45,25 @@ public class Main implements Runnable {
                     eCommerce.showErrorMessage(e.getMessage());
                 }
             }
+         */
 
+        boolean isConnected = false;
+        while (!isConnected) {
+            try {
+                User user = eCommerce.getUserInfoToBank();
+                isConnected = compteService.login(user.getEmail(), user.getpwd());
 
-
+                if (isConnected) {
+                    terminal.println("Success ! Bienvenue !");
+                    eCommerce.userFunctionalities(user);
+                } else {
+                    throw new Exception("Connexion échouée");
+                }
+            } catch (Exception e) {
+                eCommerce.showErrorMessage(e.getMessage());
+            }
+        }
 
 
     }
-
 }
