@@ -2,8 +2,10 @@ package top.nextnet.cli;
 
 import org.beryx.textio.TextIO;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
+import top.nextnet.model.Account;
 import top.nextnet.model.Bank;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 
@@ -13,7 +15,7 @@ public interface UserInterfaceCLI extends BiConsumer<TextIO, RunnerData>, UserIn
     User getUserInfoForBank(String bankName);
     Bank getUserBank();
     void displayUserOptions(top.nextnet.model.User user);
-    void showAuthorizationRequestResponse(String text, boolean authorized);
+    void displayAccounts(List<Account> accounts);
 }
 
 

@@ -8,5 +8,6 @@ import java.util.List;
 public interface BankDAO {
     Bank findMatchingBank(String name);
     List<Bank> getAllBanks();
+    String getBankNameById(int bankId);
 
 }

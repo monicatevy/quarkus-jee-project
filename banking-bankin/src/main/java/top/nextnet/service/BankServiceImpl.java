@@ -27,4 +27,14 @@ public class BankServiceImpl implements BankService {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    @Transactional
+    public String getBankNameById(int bankId) {
+        try {
+            return bankDAO.getBankNameById(bankId);
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

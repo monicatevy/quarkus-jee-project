@@ -59,6 +59,20 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         return banks.get(bankInput - 1);
     }
 
+    public void displayAccounts(List<Account> accounts) {
+        if (accounts.isEmpty()) {
+            terminal.println("No account found");
+        } else {
+            terminal.println("");
+            terminal.println("My accounts:");
+            String bankName = "";
+            for (Account account : accounts) {
+                bankName = bankService.getBankNameById(account.getIdBank());
+                terminal.println("- Account ID: " + account.getIdAccount() + bankName);
+            }
+        }
+    }
+
     @Override
     public void displayUserOptions(top.nextnet.model.User user){
         terminal.println();
@@ -66,14 +80,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         terminal.println();
         terminal.println("Menu:");
         terminal.println("(1) add account");
-    }
-
-    @Override
-    public void showAuthorizationRequestResponse(String text, boolean authorized){
-        terminal.getProperties().setPromptColor(authorized ? Color.GREEN : Color.RED);
-        terminal.println();
-        terminal.println("---------------");
-        terminal.println(text);
+        terminal.println("(2) view my accounts");
     }
 
     @Override

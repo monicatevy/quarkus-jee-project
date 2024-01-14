@@ -72,6 +72,8 @@ public class Main implements Runnable {
                             }
                         }
                         case 2 -> {
+                            eCommerce.displayAccounts(accountService.findAllAccountsByUserId(connectedUser.getIdUser()));
+                            eCommerce.displayUserOptions(connectedUser);
                         }
                         default -> terminal.println("Invalid choice.");
                     }

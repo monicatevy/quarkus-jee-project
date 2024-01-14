@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface BankService {
     List<Bank> getAllBanks();
+    String getBankNameById(int bankId);
 
 }
