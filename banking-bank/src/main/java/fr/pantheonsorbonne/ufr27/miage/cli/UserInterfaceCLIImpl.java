@@ -1,7 +1,8 @@
 package fr.pantheonsorbonne.ufr27.miage.cli;
 
-import fr.pantheonsorbonne.ufr27.miage.camel.NotificationGateway;
-import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthentification;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.pantheonsorbonne.ufr27.miage.camel.AuthorizationGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
 import fr.pantheonsorbonne.ufr27.miage.service.CompteService;
@@ -10,6 +11,8 @@ import fr.pantheonsorbonne.ufr27.miage.service.NotificationService;
 import fr.pantheonsorbonne.ufr27.miage.service.TokenService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.apache.camel.Body;
+import org.apache.camel.Header;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextTerminal;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -19,10 +22,8 @@ import fr.pantheonsorbonne.ufr27.miage.model.Notification;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Collection;
 
 @ApplicationScoped
 public class UserInterfaceCLIImpl implements UserInterfaceCLI {
@@ -36,10 +37,9 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     @Inject
     CustomerService customerService;
     @Inject
-    TokenService tokenService;
+    AuthorizationGateway authorizationGateway;
     @Inject
-    NotificationGateway notificationGateway;
-
+    TokenService tokenService;
     @ConfigProperty(name = "fr.pantheonsorbonne.ufr27.miage.bankName")
     String bankName;
 
@@ -52,7 +52,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         return new User(email,password);
     }
     @Override
-    public void userFunctionalities(User user) throws IOException {
+    public void userFunctionalities(User user){
         List<String> functionalityNames = new ArrayList<>();
         for (Functionality functionality : Functionality.values()) {
             functionalityNames.add(functionality.name().toLowerCase());
@@ -64,31 +64,33 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         }
     }
 
-    private void respondNotification(User user) throws IOException {
+    private void respondNotification(User user){
         Customer customer = customerService.findCustomer(user.getEmail());
         Account account = compteService.findAccount(customer.getIdCustomer());
 
         Collection<Notification> notif = notificationService.notificationAuthorisationAvailableForAnAccount(account.getIdAccount());
 
+        if(notif != null){
             for(Notification n : notif){
                 terminal.println(n.getTexte());
                 String response = textIO.newStringInputReader().withPossibleValues(Arrays.asList("Yes", "No")).read("Select a response");
-                /*
                 if(response.equals("Yes")) {
                     try {
-                        //DemandeAuthentification demandeAuthentification = tokenService.generateToken(user);
-                        terminal.println("Token generated and sent: " ); //pour voir la génération de token
+                        /*
+                        String token = tokenService.generateToken(user.getEmail());
+                        terminal.println("Token generated and sent: " + token); //pour voir la génération de token
+                        .\
+                         */
                     } catch (Exception e) {
                         terminal.println("Error generating token: " + e.getMessage());
                     }
                 }
-                 */
-                notificationGateway.sendResponseSynchro(response,n,user);
                 terminal.println("Message sent !");
             }
+        }else{
+            terminal.println("Empty notification");
         }
-
-
+    }
 
     @Override
     public void accept(TextIO textIO, RunnerData runnerData) {
@@ -102,6 +104,26 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         terminal.println(errorMessage);
         terminal.getProperties().setPromptColor(Color.white);
     }
+
+    public void processAuthorizationRequest(User user) throws IOException {
+
+        showTest(user);
+    }
+
+    @Override
+    public void showTest(User user) throws IOException {
+        terminal.println();
+        terminal.println();
+        terminal.println("--- AUTHORIZATION FROM BANKIN ---");
+        terminal.println("request for: " + user);
+        terminal.println();
+        terminal.println("--- Would you like to give permission?  ---");
+        String response = textIO.newStringInputReader().withPossibleValues(Arrays.asList("Yes", "No")).read("Select a response");
+        authorizationGateway.sendResponseRequest(response,user,bankName);
+        terminal.println("Authorisation sent !");
+    }
+
+
 
     @Override
     public void showSuccessMessage(String s) {

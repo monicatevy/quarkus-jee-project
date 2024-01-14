@@ -1,11 +1,14 @@
 package top.nextnet.camel;
 
 
+import fr.pantheonsorbonne.ufr27.miage.cli.UserInterface;
+import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import top.nextnet.cli.BankGroup;
 
 @ApplicationScoped
 public class CamelRoutes extends RouteBuilder {
@@ -23,6 +26,31 @@ public class CamelRoutes extends RouteBuilder {
     public void configure() throws Exception {
 
         camelContext.setTracing(true);
+
+        from("direct:cli")
+                .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
+                .choice()
+                .when(header("bankGroup").isEqualTo(BankGroup.SG))
+                .log("Request from SG bank. Using JSON format.")
+                .marshal().json()
+                .to("sjms2:" + jmsPrefix + "authorizationSG?exchangePattern=InOut")
+
+                /*
+                .when(header("bankGroup").isEqualTo(BankGroup.BPCE))
+                .log("Request from BPCE bank. Using XML format.")
+                .marshal().jaxb(User.class.getPackage().getName())
+                .to("sjms2:" + jmsPrefix + "authorizationBPCE?exchangePattern=InOut")
+                */
+
+                .otherwise()
+                .log("Unknown bankGroup: ${header.bankGroup}")
+                .end()
+        ;
+
+
+        //.to("direct:authorization");
+                //.bean(eCommerce, "showTest").stop();
+
 
         /*onException(ExpiredTransitionalTicketException.class)
                 .handled(true)

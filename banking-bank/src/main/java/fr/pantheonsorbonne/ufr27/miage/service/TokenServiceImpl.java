@@ -1,37 +1,34 @@
 package fr.pantheonsorbonne.ufr27.miage.service;
 
-import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthentification;
-import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
-import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import io.smallrye.jwt.algorithm.SignatureAlgorithm;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 
 @ApplicationScoped
 public class TokenServiceImpl implements TokenService {
     private final String secretKey = "YourVeryLongSecretKeyForJWTGeneration"; // Replace with a secure key
 
     @Override
-    @Transactional
-    public DemandeAuthentification generateToken(User user) throws TokenGenerationException {
+    public String generateToken(String email) throws TokenGenerationException {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-            String token = JWT.create()
-                    .withSubject(user.getEmail())
+            return JWT.create()
+                    .withSubject(email)
                     .withIssuedAt(new Date())
                     .sign(algorithm);
-
-            // Assuming the text for DemandeAuthorisation is the JWT token
-            return new DemandeAuthentification(user, token);
         } catch (Exception e) {
             throw new TokenGenerationException();
         }
     }
-
-
-
 }

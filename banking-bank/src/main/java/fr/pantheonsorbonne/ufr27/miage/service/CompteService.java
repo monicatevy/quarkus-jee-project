@@ -8,6 +8,6 @@ import fr.pantheonsorbonne.ufr27.miage.model.Account;
 public interface CompteService {
     Account createAccount(String fName,String lName, String adress, String email, String pwd);
     Account findAccount(int idCustomer);
-    Account login(String email, String pwd);
+    boolean login(String email, String pwd);
     void login(DemandeAuthorisation demandeAuthorisation) throws BankCustomerNotFoundException, BankAccountNotFoundException;
 }

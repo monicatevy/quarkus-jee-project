@@ -10,7 +10,6 @@ public class DemandeAuthorisation {
         this.user = user;
         this.texte = texte;
     }
-    public DemandeAuthorisation(){}
     public void setUser(User user){
         this.user = user;
     }
