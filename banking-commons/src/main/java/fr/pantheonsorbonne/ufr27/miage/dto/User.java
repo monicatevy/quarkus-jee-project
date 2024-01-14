@@ -21,7 +21,7 @@ public class User implements Serializable {
     public void setEmail(String email){
         this.email = email;
     }
-    public String getpwd(){
+    public String getPwd(){
         return this.pwd;
     }
     public void setPwd(){

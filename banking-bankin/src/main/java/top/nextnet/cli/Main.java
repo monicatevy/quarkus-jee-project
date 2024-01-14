@@ -44,7 +44,7 @@ public class Main implements Runnable {
         while (!isConnected) {
             try {
                 User user = eCommerce.getUserInfoToBankin();
-                isConnected = connexionService.login(user.getEmail(), user.getpwd());
+                isConnected = connexionService.login(user.getEmail(), user.getPwd());
 
                 if (isConnected) {
                     userService.getUserByEmail(user.getEmail());
