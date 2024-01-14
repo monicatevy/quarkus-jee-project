@@ -5,4 +5,5 @@ import top.nextnet.model.Account;
 
 public interface AccountDAO {
     Account findMatchingAccount(int idUser) throws BankinAccountNotFoundException;
+    void addAccount(Account account);
 }

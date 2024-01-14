@@ -15,7 +15,6 @@ public class AccountDAOimpl implements AccountDAO {
     @PersistenceContext(name="mysql")
     EntityManager em;
 
-
     @Override
     @Transactional
     public Account findMatchingAccount(int idUser) throws BankinAccountNotFoundException {
@@ -28,13 +27,13 @@ public class AccountDAOimpl implements AccountDAO {
             throw new BankinAccountNotFoundException();
         }
     }
-}
-    /*
-    @Override
-    public List<Account> findAccountsByCustomerId(int customerId) {
-        TypedQuery<Account> query = em.createQuery("SELECT a FROM Account a WHERE a.idUser = :customerId", Account.class);
-        query.setParameter("customerId", customerId);
-        return query.getResultList();
+
+    @Transactional
+    public void addAccount(Account account) {
+        try {
+            em.persist(account);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-    */

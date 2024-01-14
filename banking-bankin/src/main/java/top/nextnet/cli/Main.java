@@ -9,11 +9,9 @@ import org.beryx.textio.TextIoFactory;
 import org.beryx.textio.swing.SwingTextTerminal;
 import picocli.CommandLine;
 
+import top.nextnet.model.Account;
 import top.nextnet.model.Bank;
-import top.nextnet.service.AuthorizationGateway;
-import top.nextnet.service.UserService;
-import top.nextnet.service.BankService;
-import top.nextnet.service.ConnexionService;
+import top.nextnet.service.*;
 
 @CommandLine.Command(name = "greeting", mixinStandardHelpOptions = true)
 public class Main implements Runnable {
@@ -27,6 +25,8 @@ public class Main implements Runnable {
 
     @Inject
     UserService userService;
+    @Inject
+    AccountService accountService;
 
     @Inject
     ConnexionService connexionService;
@@ -56,13 +56,16 @@ public class Main implements Runnable {
                         case 1 -> {
                             Bank selectedBank = eCommerce.getUserBank();
                             User userBank = eCommerce.getUserInfoForBank(selectedBank.getName());
-
                             DemandeAuthorisation authorizationRequest = new DemandeAuthorisation(userBank, "Add account authorization request");
-
                             authorizationGateway.sendAuthorizationRequest(selectedBank.getGroupName(), authorizationRequest);
                             boolean authorized = authorizationGateway.receiveAuthorizationResponse();
                             if(authorized){
                                 eCommerce.showSuccessMessage("Authorization granted!");
+                                Account newAccount = new Account();
+                                newAccount.setIdBank(selectedBank.getIdBank());
+                                newAccount.setIdUser(connectedUser.getIdUser());
+                                accountService.addAccount(newAccount);
+                                eCommerce.showSuccessMessage("Your "+ selectedBank.getName() +" account has been created !");
                             }
                             else{
                                 eCommerce.showErrorMessage("Authorization denied.");

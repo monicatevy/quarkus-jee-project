@@ -85,6 +85,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     @Override
     public void showErrorMessage(String errorMessage) {
         terminal.getProperties().setPromptColor(Color.RED);
+        terminal.println("");
         terminal.println(errorMessage);
         terminal.getProperties().setPromptColor(Color.white);
     }
@@ -92,6 +93,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     @Override
     public void showSuccessMessage(String s) {
         terminal.getProperties().setPromptColor(Color.GREEN);
+        terminal.println("");
         terminal.println(s);
         terminal.getProperties().setPromptColor(Color.white);
     }

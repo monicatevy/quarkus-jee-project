@@ -57,14 +57,5 @@ public class CamelRoutes extends RouteBuilder {
                 .to("sjms2:topic:authorizationResponse"+ jmsPrefix)
         ;
 
-
-                /*
-                .bean(eCommerce, "showTest").stop()
-                .otherwise()
-                .log("Message not successfully received. Bank ID: ${header.bankId}, Message Body: ${body}")
-                 */
-
-
-
     }
 }
