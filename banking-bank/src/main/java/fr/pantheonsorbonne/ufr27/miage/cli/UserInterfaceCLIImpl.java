@@ -2,6 +2,8 @@ package fr.pantheonsorbonne.ufr27.miage.cli;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.pantheonsorbonne.ufr27.miage.camel.AuthorizationGateway;
+import fr.pantheonsorbonne.ufr27.miage.camel.NotificationGateway;
 import fr.pantheonsorbonne.ufr27.miage.dto.DemandeAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
 import fr.pantheonsorbonne.ufr27.miage.exception.TokenGenerationException;
@@ -74,20 +76,16 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         Collection<Notification> notif = notificationService.notificationAuthorisationAvailableForAnAccount(account.getIdAccount());
 
         if(notif != null){
-            for(Notification n : notif){
+            for(Notification n : notif) {
                 terminal.println(n.getTexte());
                 String response = textIO.newStringInputReader().withPossibleValues(Arrays.asList("Yes", "No")).read("Select a response");
-                if(response.equals("Yes")) {
-                    try {
-                        String token = tokenService.generateToken(user.getEmail());
-                        terminal.println("Token generated and sent: " + token); //pour voir la génération de token
-                    } catch (Exception | TokenGenerationException e) {
-                        terminal.println("Error generating token: " + e.getMessage());
-                    }
-                }
-                terminal.println("Message sent !");
+                notificationGateway.sendResponseSynchro(response,n);
+                terminal.println("\n==================\n");
+                terminal.println("Message sent !\n");
             }
-        }else{
+
+            }else{
+            terminal.println("\n==================\n");
             terminal.println("Empty notification");
         }
     }
@@ -98,36 +96,31 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         terminal = textIO.getTextTerminal();
    }
 
-    public boolean getAuthorizationRequestResponse(DemandeAuthorisation demandeAuthorisation) {
-        showAuthorizationRequest(demandeAuthorisation.getUser().getEmail());
-        return getClientResponse();
+    @Override
+    public void showErrorMessage(String errorMessage) {
+        terminal.getProperties().setPromptColor(Color.RED);
+        terminal.println(errorMessage);
+        terminal.getProperties().setPromptColor(Color.white);
     }
 
-    public void showAuthorizationRequest(String email) {
+    public void processAuthorizationRequest(User user) throws IOException {
         terminal.println();
-        terminal.println("--- AUTHORIZATION REQUEST FROM BANKIN ---");
-        terminal.println("Request for: " + email);
+        terminal.println();
+        terminal.println("--- AUTHORIZATION FROM BANKIN ---");
+        terminal.println("request for: " + user);
+        terminal.println();
+        terminal.println("--- Would you like to give permission?  ---");
+        terminal.println();
+        String response = textIO.newStringInputReader().withPossibleValues(Arrays.asList("Yes", "No")).read("Select a response");
+        authorizationGateway.sendResponseRequest(response,user,bankName);
+        terminal.println("Authorisation sent !");
     }
 
-    public boolean getClientResponse() {
-        String response = textIO.newStringInputReader()
-                .read("Do you authorize this request? (Y/N)");
-        return response.toUpperCase().equals("Y");
-    }
 
     @Override
     public void showSuccessMessage(String s) {
         terminal.getProperties().setPromptColor(Color.GREEN);
-        terminal.println("");
         terminal.println(s);
-        terminal.getProperties().setPromptColor(Color.white);
-    }
-
-    @Override
-    public void showErrorMessage(String errorMessage) {
-        terminal.getProperties().setPromptColor(Color.RED);
-        terminal.println("");
-        terminal.println(errorMessage);
         terminal.getProperties().setPromptColor(Color.white);
     }
 }
