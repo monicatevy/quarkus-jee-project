@@ -9,6 +9,7 @@ import org.beryx.textio.TextIoFactory;
 import org.beryx.textio.swing.SwingTextTerminal;
 import picocli.CommandLine;
 
+import top.nextnet.exception.BankinAccountNotFoundException;
 import top.nextnet.model.Account;
 import top.nextnet.model.Bank;
 import top.nextnet.service.*;
@@ -81,7 +82,7 @@ public class Main implements Runnable {
                 } else {
                     throw new Exception("Connexion échouée");
                 }
-            } catch (Exception e) {
+            } catch (Exception | BankinAccountNotFoundException e) {
                 eCommerce.showErrorMessage(e.getMessage());
             }
         }
