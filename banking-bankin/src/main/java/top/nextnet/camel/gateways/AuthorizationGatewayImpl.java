@@ -30,7 +30,7 @@ public class AuthorizationGatewayImpl implements top.nextnet.service.Authorizati
             headers.put("bankName", selectedBank.getName());
             headers.put("bankGroup", selectedBank.getGroupName());
             headers.put("clientEmail", demandeAuthorisation.getUser().getEmail());
-            producer.sendBodyAndHeaders(demandeAuthorisation, headers);
+            producer.sendBodyAndHeaders("direct:cli", demandeAuthorisation, headers);
         } catch (IOException e) {
             e.printStackTrace();
         }

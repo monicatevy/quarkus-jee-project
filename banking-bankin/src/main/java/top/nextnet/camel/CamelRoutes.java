@@ -3,6 +3,7 @@ package top.nextnet.camel;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.ReponseAuthorisation;
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
+import fr.pantheonsorbonne.ufr27.miage.service.Constante;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
@@ -35,26 +36,17 @@ public class CamelRoutes extends RouteBuilder {
 
         from("direct:cli")
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
-
-                .setHeader("bankName",simple("Boursorama"))
-                .setHeader("clientEmail",simple("1"))
-                .setHeader("bankGroup",simple("BPCE"))
-
                 .choice()
-                .when(header("bankGroup").isEqualTo(BankGroup.SG))
-                .log("Request from SG bank. Using JSON format.")
+                .when(header("bankGroup").isEqualTo(BankGroup.BPCE))
                 .marshal().json()
-                .to("sjms2:topic:authorization" + jmsPrefix + "?exchangePattern=InOut");
-
-        from("sjms2:topic:receiveToken" + jmsPrefix + "?exchangePattern=InOut")
-                .log("User email: ${header.UserEmail}, Message Body: ${body}")
-                .unmarshal().json(ReponseAuthorisation.class)
-                .bean(tokenDataService, "saveTokenData")
-                .log("Token received from bank: ${body}")
-                .to("direct:sentToken");
+                .to("sjms2:"+jmsPrefix+"requestSynch?exchangePattern=InOut")
+                .otherwise()
+                .marshal().jacksonXml()
+                .to("sjms2:"+jmsPrefix+"requestSynch?exchangePattern=InOut")
+        ;
 
 
-                /*
+        /*
                 .when(header("bankGroup").isEqualTo(BankGroup.BPCE))
                 .log("Request from BPCE bank. Using XML format.")
                 .marshal().jaxb(User.class.getPackage().getName())
@@ -65,6 +57,14 @@ public class CamelRoutes extends RouteBuilder {
                 .end()
 
                  */
+
+        from("sjms2:topic:receiveToken" + jmsPrefix + "?exchangePattern=InOut")
+                .log("User email: ${header.UserEmail}, Message Body: ${body}")
+                .unmarshal().json(ReponseAuthorisation.class)
+                .bean(tokenDataService, "saveTokenData")
+                .log("Token received from bank: ${body}")
+                .to("direct:sentToken");
+
 
 
 
