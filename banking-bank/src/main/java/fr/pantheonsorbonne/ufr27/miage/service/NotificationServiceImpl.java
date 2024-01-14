@@ -33,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public Collection<Notification> notificationAuthorisationAvailableForAnAccount(int idAccount){
+    public Collection<Notification> notificationAuthorizationAvailableForAnAccount(int idAccount){
         try{
             List<Notification> notifListRaw = new LinkedList<>(notificationDAO.findNotificationAuthorisationAvailableForAccount(idAccount));
             List<Notification> notifListAvailable = new ArrayList<>();
@@ -47,8 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
                 if(!(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                         cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
                         cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH))){
-
-                    notificationDAO.updateNotificationEtat(n.getIdNotification(),Constante.EXPIRED);
+                    this.updateNotificationHandle(n.getIdNotification());
                 }else{
                     notifListAvailable.add(n);
                 }
@@ -62,7 +61,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     public void verifyNotificationCreated(DemandeAuthorisation demandeAuthorisation) throws NotificationFoundException.NotificationAuthorisationFoundException {
         Account a = compteService.login(demandeAuthorisation.getUser().getEmail(),demandeAuthorisation.getUser().getPwd());
-        Collection<Notification> notif = this.notificationAuthorisationAvailableForAnAccount(a.getIdAccount());
+        Collection<Notification> notif = this.notificationAuthorizationAvailableForAnAccount(a.getIdAccount());
         if(notif != null && !notif.isEmpty()){
             for(Notification n : notif){
                 if(n.getTexte().equals(demandeAuthorisation.getTexte())){
@@ -95,12 +94,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public Notification updateNotificationHandle(int idNotif){
-        try{
-            Notification n = notificationDAO.updateNotificationEtat(idNotif,Constante.EXPIRED);
+            Notification notif = notificationDAO.findById(idNotif);
+            Notification n = notificationDAO.updateNotificationEtat(notif,Constante.EXPIRED);
             return n;
-        }catch (NotificationNotFoundException e) {
-            return null;
-        }
     }
 
 }

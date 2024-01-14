@@ -10,7 +10,6 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 @ApplicationScoped
-
 public class TransactionDAOimpl implements TransactionDAO{
 
     @Inject

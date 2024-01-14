@@ -8,7 +8,8 @@ import java.util.Collection;
 
 public interface NotificationDAO {
 
+    Notification findById(int idNotification);
     Collection<Notification> findNotificationAuthorisationAvailableForAccount(int idAccount) throws NotificationNotFoundException;
-    Notification updateNotificationEtat(int idNotification, byte etat) throws NotificationNotFoundException;
+    Notification updateNotificationEtat(Notification notif, byte etat);
     Notification createNewNotification(String texte, byte etat, int idAccount, Date date, String type);
 }

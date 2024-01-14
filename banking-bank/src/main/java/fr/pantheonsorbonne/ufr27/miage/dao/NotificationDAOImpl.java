@@ -34,18 +34,18 @@ public class NotificationDAOImpl implements NotificationDAO {
     }
     @Override
     @Transactional
-    public Notification updateNotificationEtat(int idNotification, byte etat) throws NotificationNotFoundException {
+    public Notification findById(int idNotification){return em.find(Notification.class, idNotification);};
+    @Override
+    @Transactional
+    public Notification updateNotificationEtat(Notification notif, byte etat){
         try{
-            Notification notif = em.find(Notification.class, idNotification);
             if(notif != null){
                 notif.setEtat(etat);
                 em.merge(notif);
-                return notif;
-            }else {
-                throw new NotificationNotFoundException();
             }
+            return notif;
         }catch(NoResultException e){
-            throw new NotificationNotFoundException();
+            return null;
         }
     }
     @Override

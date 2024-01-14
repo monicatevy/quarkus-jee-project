@@ -9,7 +9,7 @@ import fr.pantheonsorbonne.ufr27.miage.model.Notification;
 import java.util.Collection;
 
 public interface NotificationService {
-    Collection<Notification> notificationAuthorisationAvailableForAnAccount(int idAccount);
+    Collection<Notification> notificationAuthorizationAvailableForAnAccount(int idAccount);
 
     Notification updateNotificationHandle(int idNotif);
     void verifyNotificationCreated(DemandeAuthorisation demandeAuthorisation) throws BankCustomerNotFoundException, BankAccountNotFoundException, NotificationFoundException.NotificationAuthorisationFoundException;

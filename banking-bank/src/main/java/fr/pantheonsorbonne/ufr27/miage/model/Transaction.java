@@ -27,6 +27,16 @@ public class Transaction {
     @Column(name = "type", nullable = false, length = 20)
     private String type;
 
+    public Transaction(java.sql.Date date , float montant, String destinataire, byte etat , String type){
+        this.date = date;
+        this.montant = montant;
+        this.destinataire = destinataire;
+        this.etat = etat;
+        this.type = type;
+    }
+    public Transaction(){
+
+    }
     public int getIdTransaction() {
         return idTransaction;
     }

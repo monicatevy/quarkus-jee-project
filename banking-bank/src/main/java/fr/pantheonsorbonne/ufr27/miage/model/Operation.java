@@ -17,6 +17,7 @@ public class Operation {
     @Column(name = "id_transaction", nullable = false)
     private int idTransaction;
 
+
     public int getIdOperation() {
         return idOperation;
     }

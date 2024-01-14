@@ -61,7 +61,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         Customer customer = customerService.findCustomer(user.getEmail());
         Account account = compteService.findAccount(customer.getIdCustomer());
 
-        Collection<Notification> notif = notificationService.notificationAuthorisationAvailableForAnAccount(account.getIdAccount());
+        Collection<Notification> notif = notificationService.notificationAuthorizationAvailableForAnAccount(account.getIdAccount());
 
         if(notif != null && !notif.isEmpty()){
             for(Notification n : notif){
