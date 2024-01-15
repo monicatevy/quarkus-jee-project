@@ -17,6 +17,8 @@ public interface UserInterfaceCLI extends BiConsumer<TextIO, RunnerData>, UserIn
     Bank getUserBank(int userId);
     void displayUserOptions(top.nextnet.model.User user);
     void displayAccounts(List<Account> accounts);
+
+    void displayAllOperationsToCli();
 }
 
 

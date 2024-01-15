@@ -2,6 +2,7 @@ package top.nextnet.cli;
 
 
 import fr.pantheonsorbonne.ufr27.miage.cli.Functionality;
+import fr.pantheonsorbonne.ufr27.miage.model.Operation;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.beryx.textio.TextIO;
@@ -9,8 +10,10 @@ import org.beryx.textio.TextTerminal;
 //import top.nextnet.resource.VendorService;
 
 import fr.pantheonsorbonne.ufr27.miage.dto.User;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import top.nextnet.model.Account;
 import top.nextnet.model.Bank;
+import top.nextnet.resource.OperationServiceBankin;
 import top.nextnet.service.BankService;
 
 
@@ -25,6 +28,9 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
     TextTerminal<?> terminal;
     TextIO textIO;
 
+    @Inject
+    @RestClient
+    OperationServiceBankin operationService;
 
     public User getUserInfoToBankin(){
         terminal.println();
@@ -70,6 +76,13 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
                 bankName = bankService.getBankNameById(account.getIdBank());
                 terminal.println("- Account ID: " + account.getIdAccount() + bankName);
             }
+        }
+    }
+
+    public void displayAllOperationsToCli() {
+
+        for (Operation op : operationService.getOperations(1)) {
+            terminal.println("[" + op.getIdOperation() + "]" + " account : 2 et transaction " + op.getIdTransaction() );
         }
     }
 
