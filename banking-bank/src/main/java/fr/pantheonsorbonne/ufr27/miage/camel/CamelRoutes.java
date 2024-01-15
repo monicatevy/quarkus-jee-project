@@ -95,7 +95,7 @@ public class CamelRoutes extends RouteBuilder {
                 .marshal().jacksonXml()
                 .to("sjms2:topic:" + jmsPrefix + "respondSynchro");
 
-
+/*
         from("sjms2:topic:authorization" + jmsPrefix)
                 .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
                 .unmarshal().json(DemandeAuthorisation.class)
@@ -109,6 +109,7 @@ public class CamelRoutes extends RouteBuilder {
                 .setBody(constant("Response from Bank"))
                 .to("sjms2:topic:authorizationResponse"+ jmsPrefix)
         ;
+ */
 
     }
 }
