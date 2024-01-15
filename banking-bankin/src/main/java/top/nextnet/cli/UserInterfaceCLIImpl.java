@@ -81,7 +81,7 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
 
     public void displayAllOperationsToCli() {
 
-        for (Operation op : operationService.getOperations(1)) {
+        for (Operation op : operationService.getOperations(3)) {
             terminal.println("[" + op.getIdOperation() + "]" + " account : 2 et transaction " + op.getIdTransaction() );
         }
     }
