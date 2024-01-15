@@ -4,6 +4,7 @@ package top.nextnet.dao;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import top.nextnet.model.Bank;
 
@@ -45,9 +46,11 @@ public class BankDAOimpl implements BankDAO{
 
     @Override
     @Transactional
-    public List<Bank> getAllBanks() {
+    public List<Bank> getAllBanksByUserId(int userId) {
         try {
-            return em.createQuery("select b from Bank b", Bank.class).getResultList();
+            Query query = em.createQuery("SELECT DISTINCT b FROM Bank b JOIN Account a ON a.idBank = b.idBank WHERE a.idUser = :userId", Bank.class);
+            query.setParameter("userId", userId);
+            return query.getResultList();
         } catch (Exception e) {
             return Collections.emptyList();
         }

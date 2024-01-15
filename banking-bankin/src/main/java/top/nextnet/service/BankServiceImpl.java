@@ -20,11 +20,11 @@ public class BankServiceImpl implements BankService {
 
     @Override
     @Transactional
-    public List<Bank> getAllBanks() {
+    public List<Bank> getAllBankByUserId(int userId){
         try {
-            return bankDAO.getAllBanks();
+            return bankDAO.getAllBanksByUserId(userId);
         } catch (Exception e) {
-            return Collections.emptyList();
+            throw new RuntimeException(e);
         }
     }
 

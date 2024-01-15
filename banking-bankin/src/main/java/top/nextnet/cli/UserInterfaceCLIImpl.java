@@ -44,8 +44,8 @@ public class UserInterfaceCLIImpl implements UserInterfaceCLI {
         return new User(email,password);
     }
 
-    public Bank getUserBank(){
-        List<Bank> banks = bankService.getAllBanks();
+    public Bank getUserBank(int userId){
+        List<Bank> banks = bankService.getAllBankByUserId(userId);
         if (banks.isEmpty()) {
             terminal.println("No banks available.");
         } else {

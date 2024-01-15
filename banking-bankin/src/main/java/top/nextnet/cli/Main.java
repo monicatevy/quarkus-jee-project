@@ -50,33 +50,34 @@ public class Main implements Runnable {
                 if (isConnected) {
                     userService.getUserByEmail(user.getEmail());
                     top.nextnet.model.User connectedUser = userService.getUserByEmail(user.getEmail());
-                    eCommerce.displayUserOptions(connectedUser);
 
-                    int userInput = textIO.newIntInputReader().read("Enter your choice:");
-                    switch (userInput) {
-                        case 1 -> {
-                            Bank selectedBank = eCommerce.getUserBank();
-                            User userBank = eCommerce.getUserInfoForBank(selectedBank.getName());
-                            DemandeAuthorisation authorizationRequest = new DemandeAuthorisation(userBank, "Add account authorization request");
-                            authorizationGateway.sendAuthorizationRequest(selectedBank, authorizationRequest);
-                            boolean authorized = authorizationGateway.receiveAuthorizationResponse();
-                            if(authorized){
-                                eCommerce.showSuccessMessage("Authorization granted!");
-                                Account newAccount = new Account();
-                                newAccount.setIdBank(selectedBank.getIdBank());
-                                newAccount.setIdUser(connectedUser.getIdUser());
-                                accountService.addAccount(newAccount);
-                                eCommerce.showSuccessMessage("Your "+ selectedBank.getName() +" account has been created !");
+                    while(true){
+                        eCommerce.displayUserOptions(connectedUser);
+                        int userInput = textIO.newIntInputReader().read("Enter your choice:");
+                        switch (userInput) {
+                            case 1 -> {
+                                Bank selectedBank = eCommerce.getUserBank(connectedUser.getIdUser());
+                                User userBank = eCommerce.getUserInfoForBank(selectedBank.getName());
+                                DemandeAuthorisation authorizationRequest = new DemandeAuthorisation(userBank, "Add account authorization request");
+                                authorizationGateway.sendAuthorizationRequest(selectedBank, authorizationRequest);
+                                boolean authorized = authorizationGateway.receiveAuthorizationResponse();
+                                if(authorized){
+                                    eCommerce.showSuccessMessage("Authorization granted!");
+                                    Account newAccount = new Account();
+                                    newAccount.setIdBank(selectedBank.getIdBank());
+                                    newAccount.setIdUser(connectedUser.getIdUser());
+                                    accountService.addAccount(newAccount);
+                                    eCommerce.showSuccessMessage("Your "+ selectedBank.getName() +" account has been created !");
+                                }
+                                else{
+                                    eCommerce.showErrorMessage("Authorization denied.");
+                                }
                             }
-                            else{
-                                eCommerce.showErrorMessage("Authorization denied.");
+                            case 2 -> {
+                                eCommerce.displayAccounts(accountService.findAllAccountsByUserId(connectedUser.getIdUser()));
                             }
+                            default -> terminal.println("Invalid choice.");
                         }
-                        case 2 -> {
-                            eCommerce.displayAccounts(accountService.findAllAccountsByUserId(connectedUser.getIdUser()));
-                            eCommerce.displayUserOptions(connectedUser);
-                        }
-                        default -> terminal.println("Invalid choice.");
                     }
 
                 } else {
