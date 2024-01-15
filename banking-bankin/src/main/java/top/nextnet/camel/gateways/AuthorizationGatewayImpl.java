@@ -40,7 +40,7 @@ public class AuthorizationGatewayImpl implements top.nextnet.service.Authorizati
     public boolean receiveAuthorizationResponse() {
         try (ConsumerTemplate consumer = context.createConsumerTemplate()) {
             Exchange exchange = consumer.receive("sjms2:topic:" + jmsPrefix + "respondSynchro");
-            return exchange.getIn().getHeader("authorized", Boolean.class);
+            return exchange.getIn().getHeader("success", Boolean.class);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

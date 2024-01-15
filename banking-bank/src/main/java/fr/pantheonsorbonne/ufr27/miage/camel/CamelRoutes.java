@@ -95,21 +95,6 @@ public class CamelRoutes extends RouteBuilder {
                 .marshal().jacksonXml()
                 .to("sjms2:topic:" + jmsPrefix + "respondSynchro");
 
-/*
-        from("sjms2:topic:authorization" + jmsPrefix)
-                .log("Bank ID: ${header.bankGroup}, Message Body: ${body}")
-                .unmarshal().json(DemandeAuthorisation.class)
-                .bean(eCommerce, "getAuthorizationRequestResponse")
-                .choice()
-                .when(body().isEqualTo(true))
-                .setHeader("authorized", constant(true))
-                .otherwise()
-                .setHeader("authorized", constant(false))
-                .end()
-                .setBody(constant("Response from Bank"))
-                .to("sjms2:topic:authorizationResponse"+ jmsPrefix)
-        ;
- */
 
     }
 }
