@@ -48,11 +48,15 @@ public class BankDAOimpl implements BankDAO{
     @Transactional
     public List<Bank> getAllBanksByUserId(int userId) {
         try {
-            Query query = em.createQuery("SELECT DISTINCT b FROM Bank b JOIN Account a ON a.idBank = b.idBank WHERE a.idUser <> :userId", Bank.class);
-            query.setParameter("userId", userId);
-            return query.getResultList();
+            return em.createQuery(
+                            "SELECT DISTINCT b FROM Bank b WHERE NOT EXISTS " +
+                                    "(SELECT 1 FROM Account a WHERE a.idBank = b.idBank AND a.idUser = :userId)", Bank.class)
+                    .setParameter("userId", userId)
+                    .getResultList();
         } catch (Exception e) {
+            e.printStackTrace();
             return Collections.emptyList();
         }
     }
+
 }
