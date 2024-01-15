@@ -25,4 +25,11 @@ public class OperationRessource {
         return operationService.getOperationsByAccountId(idAccount);
     }
 
+    @Path("/{idAccount}/transactions")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Collection<Operation> getTransactionsByOperation(@PathParam("idAccount") int idAccount) {
+        return operationService.getOperationsByAccountId(idAccount);
+    }
+
 }
