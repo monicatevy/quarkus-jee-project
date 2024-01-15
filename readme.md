@@ -41,14 +41,13 @@ Schéma Bankin
 * Bankin DOIT avoir l’autorisation de la banque (bank) pour pouvoir agréger le compte du client.
 * L’utilisateur DOIT confirmer à sa banque que bankin peut accéder à ses comptes.
 * L’utilisateur DOIT pouvoir synchroniser ses comptes sur Bankin.
-* Bankin DOIT permettre au customer (l’utilisateur) d’effectuer des transactions sans passer par celle de sa banque.
 * Bankin DOIT proposer au customer de souscrire, s’il y en a, à d’autres offres pour réduire ses dépenses.
-* Bankin DOIT informer le customer en cas de transaction suspecte par mail. 
+* Bankin DOIT informer le customer en cas de transaction suspecte par mail.
 
 ## Exigences non fonctionnelles
 
-* Les transactions DOIVENT être sécurisées. 
 * Les banques d’un même groupe DOIVENT avoir le même format de données.
+* Le mot de passe de l'utilisateur DOIT être haché.
 
 
 
